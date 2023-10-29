@@ -3,6 +3,6 @@ version: '3.9'
 services:
   webs:
     #build: .
-    image: "trainwithshubham/node-app-test-new:latest"
+    image: "hemantjangir/node-todo-app:latest"
     ports:
       - "8000:8000"
