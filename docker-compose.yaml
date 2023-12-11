@@ -3,6 +3,6 @@ version: '3.9'
 services:
   webs:
     #build: .
-    image: "hemantjangir/node-todo-app:latest"
+    image: "hemantjangir/node-todo:latest"
     ports:
       - "8000:8000"
