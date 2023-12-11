@@ -1,41 +1,37 @@
 pipeline {
-    agent any 
+    agent any
     stages {
-        stage('clode clone') {
+        stage ("code clone") {
             steps {
                 git url: "https://github.com/Hemantjangir53/node-todo.git", branch: "main"
-                echo "code cloned successfully"
+                echo "cloning the code"
             }
         }
-        stage('Build') {
+        stage ("Build") {
             steps {
-                sh 'docker build . -t node-todo-app'
-                echo "code build successfully"
+                sh "docker build . -t node-todo"
+                echo "Build the image"
             }
         }
-        stage('push to docker Hub') {
-            steps {
-                withCredentials([
+        stage ("Push to dockerHub") {
+           steps{
+                    withCredentials([
                         usernamePassword(
                             credentialsId: 'dockerHub',
-                            usernameVariable: 'DOCKER_USERNAME',
-                            passwordVariable: 'DOCKER_PASSWORD')]){
-                                
-                                sh "docker tag node-todo-app ${env.DOCKER_USERNAME}/node-todo-app:latest"
-                                sh "docker login -u ${env.DOCKER_USERNAME} -p ${env.DOCKER_PASSWORD}"
-                                sh "docker push ${env.DOCKER_USERNAME}/node-todo-app:latest"
-                                
+                            usernameVariable: 'DOCKERHUB_USERNAME',
+                            passwordVariable: 'DOCKERHUB_PASSWORD')]){
+                                sh "docker tag node-todo ${env.DOCKERHUB_USERNAME}/node-todo:latest"   //image tag
+                                sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+                                sh "docker push ${env.DOCKERHUB_USERNAME}/node-todo:latest"    //image name-> <dockerhub_user_name>/image_name
                     }
-                
-                echo "code push"
-            }
+                    echo "code push"
+                }
         }
-        stage('deploy') {
+        stage ("Deploy") {
             steps {
-                //sh "docker run -d -p 8000:8000 hemantjangir/node-todo-app:latest"
+                //sh "docker run -d -p 8000:8000 hemantjangir/node-todo:latest"
                 sh "docker-compose down && docker-compose up -d"
-                
-                echo "container deploy"
+                echo "deploy successfully"
             }
         }
     }
